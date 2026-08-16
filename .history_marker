@@ -1,2 +1,2 @@
-Commit #17: feat: normalize synthesized audio signals to prevent clipping
-Date: 2026-08-16 19:50:45
+Commit #18: feat: add int16 WAV file export function
+Date: 2026-08-16 20:31:25
