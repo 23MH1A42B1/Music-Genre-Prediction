@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SonicGenre AI - Next-Gen Music Genre Analysis & Audio Intelligence</title>
+    <meta name="description" content="State-of-the-art AI Music Genre Classifier & Audio Feature Profiler. Predict genres with Random Forest, XGBoost, and Neural Networks in real-time.">
+    <!-- Google Fonts: Outfit & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- FontAwesome 6 Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Ambient Background Lighting -->
+    <div class="ambient-light light-1"></div>
+    <div class="ambient-light light-2"></div>
+    <div class="ambient-light light-3"></div>
+
+    <div class="app-wrapper">
+        <!-- HEADER & NAVIGATION -->
+        <header class="app-header">
+            <div class="brand">
+                <div class="brand-logo">
+                    <i class="fa-solid fa-compact-disc spin-icon"></i>
+                </div>
+                <div class="brand-text">
+                    <span class="brand-title">Sonic<span class="gradient-text">Genre</span></span>
+                    <span class="brand-subtitle">AI AUDIO INTELLIGENCE</span>
+                </div>
+            </div>
+
+            <nav class="nav-tab-container">
+                <button class="tab-btn active" data-tab="studio-tab">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> <span>Studio Predictor</span>
+                </button>
+                <button class="tab-btn" data-tab="profiler-tab">
+                    <i class="fa-solid fa-chart-pie"></i> <span>Audio Profiler</span>
+                </button>
+                <button class="tab-btn" data-tab="eda-tab">
+                    <i class="fa-solid fa-chart-scatter"></i> <span>Dataset Insights</span>
+                </button>
+                <button class="tab-btn" data-tab="benchmarks-tab">
+                    <i class="fa-solid fa-sliders"></i> <span>Model Performance</span>
+                </button>
+            </nav>
+
+            <div class="system-status">
+                <span class="pulse-dot"></span>
+                <span class="status-label">4 AI Models Live</span>
+            </div>
+        </header>
+
+        <!-- MAIN CONTENT AREA -->
+        <main class="content-area">
+
+            <!-- TAB 1: STUDIO PREDICTOR -->
+            <section id="studio-tab" class="tab-pane active">
+                <div class="hero-banner">
+                    <div class="hero-text">
+                        <h1>AI Music Genre Classifier</h1>
+                        <p>Upload any audio file or select curated genre tracks to instantly predict music genres and visualize acoustic signatures.</p>
+                    </div>
+                </div>
+
+                <div class="main-grid">
+                    <!-- Audio Input Card -->
+                    <div class="glass-panel input-panel">
+                        <div class="panel-header">
+                            <div class="panel-title">
+                                <i class="fa-solid fa-cloud-arrow-up icon-accent"></i>
+                                <h2>Audio Source Selector</h2>
+                            </div>
+                            <div class="model-picker">
+                                <label for="modelSelect">Engine:</label>
+                                <select id="modelSelect" class="styled-select">
+                                    <option value="ensemble" selected>⚡ AI Ensemble (Recommended)</option>
+                                    <option value="randomforest">🌲 Random Forest (100% Acc)</option>
+                                    <option value="xgboost">🚀 XGBoost (99.5% Acc)</option>
+                                    <option value="svm">🎯 SVM RBF Kernel (94.5% Acc)</option>
+                                    <option value="neuralnetwork">🧠 Neural Network (94.5% Acc)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Drag and Drop Zone -->
+                        <div class="upload-zone" id="dropZone">
+                            <div class="upload-icon-box">
+                                <i class="fa-solid fa-music"></i>
+                            </div>
+                            <div class="upload-instructions">
+                                <h3>Drag & Drop audio file here</h3>
+                                <p>Supports MP3, WAV, OGG, FLAC & M4A (Max 20MB)</p>
+                            </div>
+                            <button class="action-btn secondary-btn" id="browseBtn">
+                                <i class="fa-solid fa-folder-open"></i> Browse Files
+                            </button>
+                            <input type="file" id="audioFileInput" accept="audio/*" hidden>
+                        </div>
+
+                        <div class="section-divider">
+                            <span>OR PICK A CURATED SAMPLE TRACK</span>
+                        </div>
+
+                        <!-- Curated Preset Tracks -->
+                        <div class="preset-grid" id="presetTracksGrid">
+                            <!-- Preset track cards generated by JS -->
+                        </div>
+
+                        <!-- Audio Player -->
+                        <div class="player-panel hidden" id="playerPanel">
+                            <div class="player-track-info">
+                                <i class="fa-solid fa-circle-play playing-icon"></i>
+                                <div class="track-details">
+                                    <span class="track-title" id="currentTrackTitle">Sample Track</span>
+                                    <span class="track-subtitle" id="currentTrackGenre">GTZAN Audio Sample</span>
+                                </div>
+                            </div>
+                            
+                            <audio id="mainAudioPlayer" controls class="custom-audio-element"></audio>
+
+                            <div class="spectrum-container">
+                                <canvas id="waveformCanvas"></canvas>
+                            </div>
+                        </div>
+
+                        <button class="action-btn primary-btn large-btn" id="predictBtn" disabled>
+                            <i class="fa-solid fa-bolt-lightning"></i> Analyze & Predict Genre
+                        </button>
+                    </div>
+
+                    <!-- Prediction Results Panel -->
+                    <div class="glass-panel results-panel">
+                        <div class="panel-header">
+                            <div class="panel-title">
+                                <i class="fa-solid fa-square-poll-vertical icon-accent"></i>
+                                <h2>Genre Classification Results</h2>
+                            </div>
+                        </div>
+
+                        <!-- Empty State -->
+                        <div class="empty-state" id="emptyState">
+                            <div class="empty-illustration">
+                                <i class="fa-solid fa-sliders"></i>
+                            </div>
+                            <h3>No Audio Analyzed Yet</h3>
+                            <p>Upload a file or choose a preset sample on the left, then click <strong>"Analyze & Predict Genre"</strong>.</p>
+                        </div>
+
+                        <!-- Prediction Outcome -->
+                        <div class="prediction-view hidden" id="predictionView">
+                            <!-- Primary Genre Card -->
+                            <div class="hero-genre-card" id="heroGenreCard">
+                                <div class="genre-badge-icon" id="genreBadgeIcon">
+                                    <i class="fa-solid fa-guitar"></i>
+                                </div>
+                                <div class="genre-info">
+                                    <span class="card-label">PRIMARY GENRE MATCH</span>
+                                    <h3 class="genre-title" id="heroGenreTitle">ROCK</h3>
+                                    <div class="confidence-pill" id="heroConfidencePill">
+                                        <i class="fa-solid fa-circle-check"></i> <span id="heroConfidenceText">98.5% Match Confidence</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Probability Progress Bars -->
+                            <div class="prob-section">
+                                <div class="section-header">
+                                    <h4>Genre Probability Breakdown</h4>
+                                    <span class="sub-label">Top 10 Genres</span>
+                                </div>
+                                <div class="prob-list" id="probList">
+                                    <!-- Dynamic Progress Rows -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bottom Recommendations Card -->
+                <div class="glass-panel rec-panel hidden" id="recPanel">
+                    <div class="panel-header">
+                        <div class="panel-title">
+                            <i class="fa-solid fa-compact-disc icon-accent"></i>
+                            <h2>AI Similar Song Recommendations</h2>
+                        </div>
+                        <span class="pill-tag">Cosine Audio Similarity</span>
+                    </div>
+                    <div class="rec-grid" id="recGrid">
+                        <!-- Dynamic Recommendation Cards -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 2: AUDIO PROFILER -->
+            <section id="profiler-tab" class="tab-pane">
+                <div class="hero-banner">
+                    <div class="hero-text">
+                        <h1>Acoustic Signal Profiler</h1>
+                        <p>Deep-dive into spectral centroid, zero-crossing rates, tempo, energy, and 20 Mel-Frequency Cepstral Coefficients (MFCCs).</p>
+                    </div>
+                </div>
+
+                <div class="two-column-grid">
+                    <!-- Radar Chart -->
+                    <div class="glass-panel">
+                        <div class="panel-header">
+                            <div class="panel-title">
+                                <i class="fa-solid fa-radar icon-accent"></i>
+                                <h2>Acoustic Signature Radar</h2>
+                            </div>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="radarChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Metrics Grid -->
+                    <div class="glass-panel">
+                        <div class="panel-header">
+                            <div class="panel-title">
+                                <i class="fa-solid fa-microchip icon-accent"></i>
+                                <h2>Extracted Audio Vector</h2>
+                            </div>
+                        </div>
+                        <div class="feature-cards-grid">
+                            <div class="feature-card">
+                                <span class="f-label">Rhythm & Tempo</span>
+                                <span class="f-val" id="profTempo">-- BPM</span>
+                                <span class="f-sub">Beat pulse frequency</span>
+                            </div>
+                            <div class="feature-card">
+                                <span class="f-label">Spectral Centroid</span>
+                                <span class="f-val" id="profCentroid">-- Hz</span>
+                                <span class="f-sub">Audio brightness</span>
+                            </div>
+                            <div class="feature-card">
+                                <span class="f-label">Zero Crossing Rate</span>
+                                <span class="f-val" id="profZcr">--</span>
+                                <span class="f-sub">Noise & percussiveness</span>
+                            </div>
+                            <div class="feature-card">
+                                <span class="f-label">Track Energy</span>
+                                <span class="f-val" id="profEnergy">--</span>
+                                <span class="f-sub">Intensity index</span>
+                            </div>
+                            <div class="feature-card">
+                                <span class="f-label">Danceability</span>
+                                <span class="f-val" id="profDance">--</span>
+                                <span class="f-sub">Rhythmic regularity</span>
+                            </div>
+                            <div class="feature-card">
+                                <span class="f-label">RMS Signal Power</span>
+                                <span class="f-val" id="profRms">--</span>
+                                <span class="f-sub">Average loudness</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MFCC Coefficients -->
+                <div class="glass-panel full-width-panel margin-top-panel">
+                    <div class="panel-header">
+                        <div class="panel-title">
+                            <i class="fa-solid fa-wave-square icon-accent"></i>
+                            <h2>Mel-Frequency Cepstral Coefficients (MFCC 1–20)</h2>
+                        </div>
+                        <span class="sub-label">Timbral Spectrum Shape</span>
+                    </div>
+                    <div class="chart-wrapper-large">
+                        <canvas id="mfccChart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 3: DATASET INSIGHTS -->
+            <section id="eda-tab" class="tab-pane">
+                <div class="hero-banner">
+                    <div class="hero-text">
+                        <h1>GTZAN Dataset Explorer</h1>
+                        <p>Explore correlation matrices, feature distributions across 1,000 tracks, and 3D PCA dimension reduction clusters.</p>
+                    </div>
+                </div>
+
+                <div class="two-column-grid">
+                    <div class="glass-panel">
+                        <div class="panel-header">
+                            <div class="panel-title">
+                                <i class="fa-solid fa-grid-2 icon-accent"></i>
+                                <h2>Feature Correlations</h2>
+                            </div>
+                        </div>
+                        <div class="chart-wrapper-large">
+                            <canvas id="correlationChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="glass-panel">
+                        <div class="panel-header">
+                            <div class="panel-title">
+                                <i class="fa-solid fa-circle-nodes icon-accent"></i>
+                                <h2>PCA Genre Cluster Map</h2>
+                            </div>
+                        </div>
+                        <div class="chart-wrapper-large">
+                            <canvas id="pcaChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 4: MODEL PERFORMANCE -->
+            <section id="benchmarks-tab" class="tab-pane">
+                <div class="hero-banner">
+                    <div class="hero-text">
+                        <h1>Machine Learning Model Benchmarks</h1>
+                        <p>Compare accuracy, F1-scores, precision, recall, and confusion matrix performance across all 4 trained AI classifiers.</p>
+                    </div>
+                </div>
+
+                <div class="two-column-grid">
+                    <div class="glass-panel">
+                        <div class="panel-header">
+                            <div class="panel-title">
+                                <i class="fa-solid fa-trophy icon-accent"></i>
+                                <h2>Model Accuracy & F1 Comparison</h2>
+                            </div>
+                        </div>
+                        <div class="chart-wrapper-large">
+                            <canvas id="benchmarkChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="glass-panel">
+                        <div class="panel-header">
+                            <div class="panel-title">
+                                <i class="fa-solid fa-table-cells icon-accent"></i>
+                                <h2>Confusion Matrix Explorer</h2>
+                            </div>
+                            <select id="matrixModelSelect" class="styled-select">
+                                <option value="RandomForest">Random Forest (100%)</option>
+                                <option value="XGBoost">XGBoost (99.5%)</option>
+                                <option value="SVM">SVM (94.5%)</option>
+                                <option value="NeuralNetwork">Neural Network (94.5%)</option>
+                            </select>
+                        </div>
+                        <div class="table-container">
+                            <table class="styled-table" id="confusionTable">
+                                <!-- Generated by JS -->
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- FOOTER -->
+        <footer class="app-footer">
+            <div class="footer-content">
+                <span>SonicGenre AI System • Powered by Python, Scikit-Learn, XGBoost & Web Audio API</span>
+            </div>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
