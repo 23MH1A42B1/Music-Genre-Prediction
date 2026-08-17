@@ -1,2 +1,2 @@
-Commit #36: feat: add pydub fallback for MP3 and compressed audio files
-Date: 2026-08-17 08:43:31
+Commit #37: feat: implement direct float PCM audio buffer extractor
+Date: 2026-08-17 09:24:12
